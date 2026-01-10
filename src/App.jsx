@@ -6,6 +6,8 @@ import SignupStudent from "./pages/SignupStudent";
 import Login from "./pages/Login";
 import MainLayout from "./layout/MainLayout";
 import AuthLayout from "./layout/AuthLayout";
+import TutorCalendar from "./pages/Calendar/TutorCalendar";
+import TutorPage from "./pages/TutorPage/TutorPage";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route path="/signup-student" element={<SignupStudent />} />
           <Route path="/signup-tutor" element={<SignupTutor />} />
           <Route path="/become-tutor" element={<BecomeTutor />} />
+          <Route path="/tutor-calendar" element={<TutorCalendar />} />
+          <Route path="/tutor-page" element={<TutorPage />} />
         </Route>
       </Routes>
     </Router>

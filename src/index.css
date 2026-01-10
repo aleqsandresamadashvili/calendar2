@@ -10,3 +10,143 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 } */
+
+@import "@fullcalendar/common/main.css";
+@import "@fullcalendar/timegrid/main.css";
+@import "@fullcalendar/daygrid/main.css";
+
+
+
+.fc {
+  font-family: inherit;
+  height: 100%;
+  --fc-border-color: #eef2f7;
+  --fc-today-bg-color: transparent;
+}
+
+.fc-toolbar {
+  padding: 16px 20px;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.fc-toolbar-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.fc-button {
+  background: #2563eb !important;
+  border: none !important;
+  padding: 6px 10px !important;
+  border-radius: 8px !important;
+}
+
+.fc-button:hover {
+  background: #1d4ed8 !important;
+}
+
+.fc-col-header-cell {
+  background: white;
+  border-bottom: 1px solid #eef2f7;
+  padding: 10px 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.fc-day-today .fc-col-header-cell-cushion {
+  background: #e0ecff;
+  color: #2563eb;
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
+.fc-timegrid-slot-label {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.fc-timegrid-slot {
+  height: 56px;
+  border-color: #eef2f7;
+}
+
+
+.lesson-green {
+  background-color: #22c55e !important;
+  border: none !important;
+  color: white !important;
+  border-radius: 8px;
+  padding: 4px 6px;
+  font-size: 12px;
+}
+
+.lesson-blue {
+  background-color: #3b82f6 !important;
+  color: white !important;
+}
+
+.lesson-red {
+  background-color: #ef4444 !important;
+  color: white !important;
+}
+
+/* ===================== */
+/* MONTH VIEW */
+/* ===================== */
+
+.fc-daygrid-day-frame {
+  padding: 6px;
+}
+
+.fc-daygrid-day-number {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.fc-day-today {
+  background: transparent !important;
+}
+
+.fc-day-today .fc-daygrid-day-number {
+  background: #2563eb;
+  color: white;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fc-daygrid-event {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.fc-daygrid-event-harness {
+  margin-top: 4px;
+}
+
+.fc-event-title {
+  font-size: 11px;
+  color: #111827;
+}
+
+.fc-daygrid-event::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #2563eb;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.fc-more-link {
+  font-size: 11px;
+  color: #2563eb;
+}

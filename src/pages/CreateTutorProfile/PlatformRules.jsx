@@ -8,44 +8,48 @@ export default function PlatformRules({ setStep }) {
           🛡️
         </div>
 
-        <h3 className="text-lg font-semibold mt-4">Platform Rules</h3>
+        <h3 className="text-lg font-semibold mt-4">პლატფორმის წესები</h3>
         <p className="text-gray-600 text-sm">
-          Please review and accept our guidelines
+          გთხოვთ, გაეცნოთ ჩვენს წესებს და დაეთანხმოთ მათ
         </p>
       </div>
 
       <div className="mt-8 space-y-6">
         <div className="border rounded-xl p-6 bg-[#F4F8FF]">
-          <p className="font-semibold mb-4">📘 Important Platform Guidelines</p>
+          <p className="font-semibold mb-4">
+            📘 მნიშვნელოვანი პლატფორმის წესები
+          </p>
 
           <div className="max-h-72 overflow-y-auto pr-2 space-y-4 hide-scrollbar">
             <div className="bg-white p-4 rounded-lg border">
               <h4 className="font-semibold text-sm text-blue-600">
-                Platform Fee
+                პლატფორმის საკომისიო
               </h4>
               <p className="text-sm text-gray-600 mt-1">
-                The platform charges a 10% commission on all income earned
-                through the platform. This helps us maintain and improve our
-                services.
+                პლატფორმა იტვირთავს 10% საკომისიოს ყველა შემოსავლიდან, რომელიც
+                გამომუშავდება პლატფორმის მეშვეობით. ეს ეხმარება ჩვენს სერვისების
+                შენარჩუნებასა და გაუმჯობესებაში.
               </p>
             </div>
 
             <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
               <h4 className="font-semibold text-sm text-red-600 flex items-center gap-2">
-                ⚠️ Strictly Forbidden
+                ⚠️ აკრძალულია
               </h4>
 
               <p className="text-s mt-2">
-                Taking students outside the platform is strictly prohibited.
+                სტუდენტების პლატფორმის მიღმა წაყვანა მკაცრად აკრძალულია და
+                გამოიწვევს:{" "}
               </p>
               <ul className="text-sm text-gray-700 list-disc pl-5 mt-2">
-                <li>Permanent account suspension</li>
-                <li>Loss of all platform benefits</li>
-                <li>Potential legal action</li>
+                <li>ანგარიშის მუდმივ შეჩერებას</li>
+                <li>პლატფორმის ყველა სარგებლის დაკარგვას</li>
+                <li>შესაძლო სამართლებრივ ღონისძიებებს</li>
               </ul>
 
               <p className="text-xs text-gray-500 mt-2">
-                All lessons and payments must go through our secure platform.
+                ყველა გაკვეთილი და გადახდა უნდა განხორციელდეს ჩვენი უსაფრთხო
+                პლატფორმის მეშვეობით.{" "}
               </p>
             </div>
 
@@ -116,24 +120,27 @@ export default function PlatformRules({ setStep }) {
         <label className="flex items-start gap-3 text-sm bg-gray-50 p-4 rounded-lg border cursor-pointer">
           <input type="checkbox" className="mt-1" />
           <span>
-            I have read and agree to abide by all platform rules and guidelines.
-            I understand violations may result in suspension or termination.
+            მე წავიკითხე და ვეთანხმები პლატფორმის ყველა წესსა და მითითებას.
+            ვაცნობიერებ, რომ დარღვევის შემთხვევაში ჩემი ანგარიში შესაძლოა
+            შეჩერდეს ან გაუქმდეს.
           </span>
         </label>
 
         <div className="border rounded-xl p-6 bg-[#F4F8FF]">
           <p className="font-semibold mb-2">
-            🪪 Identity Document for Safety Verification
+            🪪 პირადობის დოკუმენტი უსაფრთხოების ვერიფიკაციისთვის
           </p>
           <p>
-            This is a children's platform — safety is our priority. Please
-            upload a clear ID of yourself for identity verification.
+            ეს არის ბავშვებისთვის განკუთვნილი პლატფორმა — უსაფრთხოება ჩვენი
+            მთავარი პრიორიტეტია.
           </p>
-          <p className="text-sm font-bold mb-4">Upload your ID</p>
+          <p className="text-sm font-bold mb-4">
+            გთხოვთ, ატვირთოთ თქვენი პირადობის დოკუმენტი *{" "}
+          </p>
 
           <label className="w-full border-2 border-dashed border-gray-300 rounded-lg p-10 flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:bg-gray-100">
-            <span>Click to upload ID</span>
-            <span className="text-xs mt-1">PNG, JPG up to 10MB</span>
+            <span>ატვირთეთ თქვენი პირადობა</span>
+            <span className="text-xs mt-1">PNG, JPG მაქსიმუმ 10MB</span>
             <input type="file" className="hidden" />
           </label>
         </div>

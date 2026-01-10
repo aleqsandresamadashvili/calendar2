@@ -1,8 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function SignupStudent() {
+export default function SignupTeacher() {
   const navigate = useNavigate();
+
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleRegister = async () => {
+    setLoading(true);
+    setErrorMsg("");
+
+    try {
+      const names = fullName.trim().split(" ");
+      const firstName = names[0] || "";
+      const lastName = names.slice(1).join(" ") || "";
+      const username = email.split("@")[0];
+
+      const res = await fetch(
+        "http://memora-alb-877723400.eu-central-1.elb.amazonaws.com/api/v1/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            username,
+            password,
+            firstName,
+            lastName,
+            role: "STUDENT",
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        setErrorMsg(err?.message || "Registration failed");
+        setLoading(false);
+        return;
+      }
+      const data = await res.json();
+
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
+      localStorage.setItem("expires_in", data.expires_in);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      navigate("/login");
+    } catch (err) {
+      setErrorMsg("Something went wrong. Try again.");
+    }
+
+    setLoading(false);
+  };
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-white">
       {/* LEFT SIDE */}
@@ -16,10 +72,10 @@ export default function SignupStudent() {
 
         <div className="mt-20">
           <h1 className="text-4xl font-bold mb-4 leading-tight">
-            Become A Student
+            Become A Teacher
           </h1>
           <p className="text-gray-700 text-lg max-w-sm">
-            Ragac Texti Here, Will Get Filled Later
+            Enter your details to create a teacher account.
           </p>
         </div>
 
@@ -45,44 +101,18 @@ export default function SignupStudent() {
       <div className="flex-1 flex justify-center items-center p-10">
         <div className="bg-white shadow-xl rounded-2xl w-full max-w-md p-8">
           <h2 className="text-2xl font-semibold text-center">
-            Create Student Account
+            Create Teacher Account
           </h2>
-          <p className="text-center text-gray-600 mb-6">Start studying</p>
+          <p className="text-center text-gray-600 mb-6">Start teaching</p>
 
-          {/* Google Button */}
-          <button className="w-full py-3 border rounded-lg flex items-center justify-center gap-2 mb-4 hover:bg-gray-50">
-            <img
-              src="https://www.svgrepo.com/show/355037/google.svg"
-              className="w-5 h-5"
-              alt=""
-            />
-            Sign Up With Google
-          </button>
-
-          <button className="w-full py-3 border rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50">
-            <img
-              src="https://www.svgrepo.com/show/452196/facebook-1.svg"
-              className="w-5 h-5"
-              alt=""
-            />
-            Sign Up With Facebook
-          </button>
-
-          {/* Divider */}
-          <div className="flex items-center my-6">
-            <div className="flex-1 h-px bg-gray-300"></div>
-            <span className="px-3 text-gray-500 text-sm">
-              Or continue with email
-            </span>
-            <div className="flex-1 h-px bg-gray-300"></div>
-          </div>
-
-          {/* Form */}
+          {/* FORM */}
           <div className="space-y-4">
             <div>
               <label className="text-sm text-gray-600">Full Name</label>
               <input
                 type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
                 placeholder="John Doe"
                 className="w-full mt-1 px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
               />
@@ -92,6 +122,8 @@ export default function SignupStudent() {
               <label className="text-sm text-gray-600">Email</label>
               <input
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 className="w-full mt-1 px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
               />
@@ -101,37 +133,38 @@ export default function SignupStudent() {
               <label className="text-sm text-gray-600">Password</label>
               <input
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Create a Password (min. 8 characters)"
                 className="w-full mt-1 px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
           </div>
 
-          <p className="text-xs text-blue-600 mt-3">
-            After signing up, you’ll complete your student profile with
-            preferences.
-          </p>
+          {/* ERROR */}
+          {errorMsg && <p className="text-red-500 text-sm mt-3">{errorMsg}</p>}
 
-          {/* Terms */}
           <label className="flex items-center gap-2 mt-4 text-sm text-gray-700">
             <input type="checkbox" />I Accept the{" "}
             <span className="text-blue-600">Terms</span>
           </label>
 
-          {/* Button */}
-          <button className="w-full mt-5 bg-blue-500 text-white py-3 rounded-lg text-lg font-medium hover:bg-blue-600 transition">
-            Create Student Account
+          <button
+            onClick={handleRegister}
+            disabled={loading}
+            className="w-full mt-5 bg-blue-500 text-white py-3 rounded-lg text-lg font-medium hover:bg-blue-600 transition disabled:bg-gray-400"
+          >
+            {loading ? "Creating..." : "Create Teacher Account"}
           </button>
 
           <p className="text-center text-sm text-gray-700 mt-4">
             Already Have An Account?{" "}
-            <a
-              className="text-blue-600"
-              href="#"
+            <span
+              className="text-blue-600 cursor-pointer"
               onClick={() => navigate("/login")}
             >
               Log In
-            </a>
+            </span>
           </p>
         </div>
       </div>

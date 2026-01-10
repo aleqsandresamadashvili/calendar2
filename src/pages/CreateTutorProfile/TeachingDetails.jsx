@@ -1,16 +1,68 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function TeachingDetails({ onNext, onBack }) {
-  const allSubjects = [
-    "Mathematics",
-    "English",
-    "Physics",
-    "Biology",
-    "IELTS",
-    "Georgian",
-  ];
-
+  const [subjects, setSubjects] = useState([]);
   const [selectedSubjects, setSelectedSubjects] = useState([]);
+  const [lessonTypes, setLessonTypes] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("access_token");
+
+        const resSubjects = await fetch(
+          "http://memora-alb-877723400.eu-central-1.elb.amazonaws.com/api/v1/subjects",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: "include",
+          }
+        );
+
+        if (!resSubjects.ok) throw new Error("Subjects fetch failed");
+
+        const subjectsData = await resSubjects.json();
+
+        const flat = [];
+        const flatten = (item) => {
+          flat.push(item.name);
+          if (item.children?.length) item.children.forEach(flatten);
+        };
+
+        const subjectsArray = Array.isArray(subjectsData)
+          ? subjectsData
+          : subjectsData.data || [];
+        subjectsArray.forEach(flatten);
+
+        setSubjects(flat);
+
+        // -------- FETCH LESSON TYPES --------
+        const resTypes = await fetch(
+          "http://memora-alb-877723400.eu-central-1.elb.amazonaws.com/api/v1/lesson-types",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: "include",
+          }
+        );
+
+        if (!resTypes.ok) throw new Error("Lesson types fetch failed");
+
+        const lessonTypesData = await resTypes.json();
+        setLessonTypes(lessonTypesData);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSelect = (subject) => {
     if (selectedSubjects.some((s) => s.name === subject)) {
@@ -46,31 +98,35 @@ export default function TeachingDetails({ onNext, onBack }) {
         </div>
 
         <h2 className="text-center text-lg font-semibold mt-3">
-          Teaching Details
+          სასწავლო დეტალები
         </h2>
         <p className="text-center text-sm text-gray-600">
-          Tell us what and how you teach
+          გვითხარით, რას და როგორ ასწავლით
         </p>
 
         <div className="mt-6">
           <p className="text-sm font-medium">
-            Add Subjects <span className="text-red-500">*</span>
+            კატეგორიების დამატება * <span className="text-red-500">*</span>
           </p>
 
           <div className="mt-3 bg-[#F3F7FF] p-4 rounded-xl flex flex-wrap gap-3">
-            {allSubjects.map((subject) => (
-              <button
-                key={subject}
-                onClick={() => handleSelect(subject)}
-                className={`px-4 py-1.5 rounded-full border transition ${
-                  selectedSubjects.some((s) => s.name === subject)
-                    ? "bg-blue-600 text-white border-blue-600"
-                    : "bg-white text-gray-700 border-gray-300 hover:border-blue-400"
-                }`}
-              >
-                {subject}
-              </button>
-            ))}
+            {subjects.length > 0 ? (
+              subjects.map((subject) => (
+                <button
+                  key={subject}
+                  onClick={() => handleSelect(subject)}
+                  className={`px-4 py-1.5 rounded-full border transition ${
+                    selectedSubjects.some((s) => s.name === subject)
+                      ? "bg-blue-600 text-white border-blue-600"
+                      : "bg-white text-gray-700 border-gray-300 hover:border-blue-400"
+                  }`}
+                >
+                  {subject}
+                </button>
+              ))
+            ) : (
+              <p className="text-gray-600">Loading subjects...</p>
+            )}
           </div>
 
           <div className="text-right text-xs text-gray-500 mt-1">
@@ -126,17 +182,17 @@ export default function TeachingDetails({ onNext, onBack }) {
               </p>
 
               <div className="flex gap-3 mt-2">
-                {["Online Lessons", "In-Person", "Both"].map((type) => (
+                {lessonTypes.map((type) => (
                   <button
-                    key={type}
-                    onClick={() => updateTeachingType(subject.name, type)}
+                    key={type.id}
+                    onClick={() => updateTeachingType(subject.name, type.code)}
                     className={`flex-1 py-2 rounded-lg border ${
-                      subject.teachingType === type
+                      subject.teachingType === type.code
                         ? "bg-blue-600 text-white border-blue-600"
                         : "bg-white text-gray-700 border-gray-300"
                     }`}
                   >
-                    {type}
+                    {type.label}
                   </button>
                 ))}
               </div>

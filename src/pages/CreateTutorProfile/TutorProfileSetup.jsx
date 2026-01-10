@@ -1,136 +1,166 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
-export default function TutorProfileSetup({ setStep }) {
-  const [profilePhoto, setProfilePhoto] = useState(null);
-  const [introVideo, setIntroVideo] = useState(null);
-  const [aboutText, setAboutText] = useState("");
+const ProfileSetupForm = () => {
+  const [formData, setFormData] = useState({
+    headline: "",
+    mainDescription: "",
+    skills: [],
+    skillInput: "",
+  });
 
-  const photoInputRef = useRef();
-  const videoInputRef = useRef();
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
-  const handlePhotoChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setProfilePhoto(e.target.files[0].name);
+  const handleAddSkill = () => {
+    if (formData.skillInput && !formData.skills.includes(formData.skillInput)) {
+      setFormData({
+        ...formData,
+        skills: [...formData.skills, formData.skillInput],
+        skillInput: "",
+      });
     }
   };
 
-  const handleVideoChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setIntroVideo(e.target.files[0].name);
-    }
+  const handleRemoveSkill = (skill) => {
+    setFormData({
+      ...formData,
+      skills: formData.skills.filter((s) => s !== skill),
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission logic here
   };
 
   return (
-    <div className="min-h-screen w-full bg-gray-50 flex flex-col items-center py-10 px-4">
-      {/* Card Container */}
-      <div className="bg-white w-full max-w-2xl rounded-xl shadow p-8">
-        <h2 className="text-xl font-semibold text-center mb-6">
-          Profile Setup
-        </h2>
-        <p className="text-center text-gray-500 mb-8">
-          Create your tutor account
-        </p>
+    <div className="w-full max-w-xl mx-auto p-8 bg-white shadow-lg rounded-lg">
+      {/* image here  */}
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4 flex flex-col items-center">
+          <h3 className="text-xl font-medium">პროფილის შექმნა</h3>
+          <p className="text-sm text-gray-500">დეტალები</p>
+        </div>
 
-        {/* Profile Photo */}
-        <div className="mb-8">
-          <label className="block mb-2 font-medium">
-            Profile Photo <span className="text-red-500">*</span>
-          </label>
-
-          <input
-            type="file"
-            accept="image/*"
-            ref={photoInputRef}
-            onChange={handlePhotoChange}
-            className="hidden"
-          />
-
-          <div
-            onClick={() => photoInputRef.current.click()}
-            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-500 transition"
+        {/* Headline */}
+        <div className="mb-4">
+          <label
+            htmlFor="headline"
+            className="block text-lg font-medium text-gray-700"
           >
-            <p className="text-gray-500">
-              {profilePhoto
-                ? `Selected: ${profilePhoto}`
-                : "Click to upload your profile photo"}
-            </p>
-            <p className="text-xs text-gray-400 mt-1">JPG, PNG up to 10MB</p>
-            <p className="mt-3 text-xs text-gray-400">
-              Recommended: Square photo, smiling, professional background
-            </p>
+            სათაური *{" "}
+          </label>
+          <p>(მოკლე აღწერა)</p>
+          <input
+            type="text"
+            id="headline"
+            name="headline"
+            value={formData.headline}
+            onChange={handleInputChange}
+            className="mt-2 w-full text-sm border rounded-md p-2"
+            placeholder="მაგ.: გამოცდილებით მქონე მათემატიკის ტუტორი, რომელიც მუშაობს სკოლასა და უნივერსიტეტთან."
+            required
+          />
+        </div>
+
+        {/* Main Description */}
+        <div className="mb-4">
+          <label
+            htmlFor="mainDescription"
+            className="block text-lg font-medium text-gray-700"
+          >
+            მთავარი აღწერა *
+          </label>
+          <p>
+            მოსწავლეებს მოუყევი შენი საგაკვეთილო გამოცდილების, მეთოდების და იმ
+            მიზეზების შესახებ, რაც შენს სწავლებას უნიკალურად აქცევს.
+          </p>
+          <textarea
+            id="mainDescription"
+            name="mainDescription"
+            value={formData.mainDescription}
+            onChange={handleInputChange}
+            className="mt-2 w-full text-sm border rounded-md p-2"
+            placeholder="მაგ.: მე ვარ მათემატიკის ტუტორი 5-წლიანი გამოცდილებით, რომელიც ეხმარება სტუდენტებს უკეთ გაიაზრონ რთული თემები. ჩემი სწავლების სტილი ეფუძნება რეალურ მაგალითებს, ინტერაქციასა და მარტივ ახსნებს..."
+            rows="4"
+            maxLength="600"
+            required
+          ></textarea>
+          <div className="text-sm text-gray-500">
+            {formData.mainDescription.length} / 600 characters
           </div>
         </div>
 
-        {/* Introduction Video */}
-        <div className="mb-8">
-          <label className="block mb-2 font-medium">
-            Introduction Video <span className="text-gray-400">(Optional)</span>
+        {/* Skills */}
+        <div className="mb-4">
+          <label
+            htmlFor="skills"
+            className="block text-lg font-medium text-gray-700"
+          >
+            უნარები *
           </label>
-
-          <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-4 text-sm text-blue-700">
-            <p className="font-semibold mb-2">🎥 Video Guidelines</p>
-            <ul className="list-disc ml-5 space-y-1">
-              <li>Keep it between 30–60 seconds</li>
-              <li>Introduce yourself and your teaching experience</li>
-              <li>Explain what makes you a great tutor</li>
-              <li>Ensure good lighting and clear audio</li>
-              <li>Tutors with videos get 3× more student inquiries!</li>
+          <div className="flex items-center">
+            <input
+              type="text"
+              id="skills"
+              name="skillInput"
+              value={formData.skillInput}
+              onChange={handleInputChange}
+              className="mt-2 w-full text-sm border rounded-md p-2"
+              placeholder="მაგ.: ალგებრა, კალკულუსი, SAT"
+            />
+            <button
+              type="button"
+              onClick={handleAddSkill}
+              className="ml-2 bg-purple-600 text-white px-4 py-2 rounded-md"
+            >
+              + დამატება
+            </button>
+          </div>
+          <div className="mt-2">
+            <ul className="flex flex-wrap gap-2">
+              {formData.skills.map((skill, index) => (
+                <li
+                  key={index}
+                  className="bg-gray-200 px-3 py-1 rounded-full text-sm flex items-center"
+                >
+                  {skill}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveSkill(skill)}
+                    className="ml-2 text-red-500"
+                  >
+                    x
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
-
-          <input
-            type="file"
-            accept="video/*"
-            ref={videoInputRef}
-            onChange={handleVideoChange}
-            className="hidden"
-          />
-
-          <div
-            onClick={() => videoInputRef.current.click()}
-            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-500 transition"
-          >
-            <p className="text-gray-500">
-              {introVideo
-                ? `Selected: ${introVideo}`
-                : "Click to upload your introduction video"}
-            </p>
-            <p className="text-xs text-gray-400 mt-1">MP4, MOV up to 50MB</p>
-          </div>
         </div>
 
-        {/* About You */}
-        <div className="mb-8">
-          <label className="block mb-2 font-medium">About You</label>
-          <textarea
-            rows="4"
-            maxLength="500"
-            value={aboutText}
-            onChange={(e) => setAboutText(e.target.value)}
-            className="w-full border rounded-md p-3 text-sm outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Example: I’m a passionate mathematics tutor with 5 years of experience..."
-          ></textarea>
-          <p className="text-right text-gray-400 text-xs mt-1">
-            {aboutText.length}/500 characters
-          </p>
-        </div>
-
-        {/* Buttons */}
-        <div className="flex justify-between mt-8">
+        {/* Submit Button */}
+        <div className="flex justify-between">
           <button
-            onClick={() => setStep && setStep(3)}
-            className="px-6 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-100"
+            type="button"
+            className="bg-gray-200 text-gray-600 px-4 py-2 rounded-md"
           >
-            ← Back
+            Back
           </button>
           <button
-            onClick={() => setStep && setStep(5)}
-            className="px-6 py-2 rounded-md bg-gradient-to-r from-purple-500 to-indigo-500 text-white hover:opacity-90"
+            type="submit"
+            className="bg-purple-600 text-white px-6 py-2 rounded-md"
           >
-            Continue →
+            Continue
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
-}
+};
+
+export default ProfileSetupForm;

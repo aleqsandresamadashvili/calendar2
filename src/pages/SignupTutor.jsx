@@ -1,8 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function SignupTutor() {
   const navigate = useNavigate();
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleRegister = async () => {
+    setLoading(true);
+    setErrorMsg("");
+
+    try {
+      const names = fullName.trim().split(" ");
+      const firstName = names[0] || "";
+      const lastName = names.slice(1).join(" ") || "";
+      const username = email.split("@")[0];
+
+      const res = await fetch(
+        "http://memora-alb-877723400.eu-central-1.elb.amazonaws.com/api/v1/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            username,
+            password,
+            firstName,
+            lastName,
+            role: "TEACHER",
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        setErrorMsg(err?.message || "Registration failed");
+        setLoading(false);
+        return;
+      }
+      const data = await res.json();
+
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
+      localStorage.setItem("expires_in", data.expires_in);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      navigate("/become-tutor");
+    } catch (err) {
+      setErrorMsg("Something went wrong. Try again.");
+    }
+
+    setLoading(false);
+  };
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-white">
       {/* LEFT SIDE */}
@@ -85,6 +139,8 @@ export default function SignupTutor() {
               <input
                 type="text"
                 placeholder="John Doe"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
                 className="w-full mt-1 px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-purple-400"
               />
             </div>
@@ -94,6 +150,8 @@ export default function SignupTutor() {
               <input
                 type="email"
                 placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full mt-1 px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-purple-400"
               />
             </div>
@@ -103,10 +161,15 @@ export default function SignupTutor() {
               <input
                 type="password"
                 placeholder="Create a Password (min. 8 characters)"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full mt-1 px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-purple-400"
               />
             </div>
           </div>
+
+          {/* ERROR */}
+          {errorMsg && <p className="text-red-500 text-sm mt-3">{errorMsg}</p>}
 
           <p className="text-xs text-purple-600 mt-3">
             After signing up, you’ll complete your tutor profile with subjects,
@@ -121,7 +184,9 @@ export default function SignupTutor() {
 
           {/* Button */}
           <button
-            onClick={() => navigate("/become-tutor")}
+            // onClick={() => navigate("/become-tutor")}
+            onClick={handleRegister}
+            disabled={loading}
             className="w-full mt-5 bg-purple-400 text-white py-3 rounded-lg text-lg font-medium hover:bg-purple-500 transition"
           >
             Create Tutor Account

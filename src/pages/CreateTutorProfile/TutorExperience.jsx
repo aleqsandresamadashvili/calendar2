@@ -1,150 +1,114 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 
-export default function TutorExperience({ onBack, onNext }) {
-  const [portfolioFiles, setPortfolioFiles] = useState([]);
-  const [diplomaFile, setDiplomaFile] = useState(null);
-  const [certificateFiles, setCertificateFiles] = useState([]);
+const MediaProfileSetupForm = () => {
+  const [formData, setFormData] = useState({
+    profilePhoto: null,
+    introductionVideo: null,
+  });
 
-  const portfolioInputRef = useRef(null);
-  const diplomaInputRef = useRef(null);
-  const certificateInputRef = useRef(null);
+  const handleFileChange = (e, field) => {
+    setFormData({
+      ...formData,
+      [field]: e.target.files[0],
+    });
+  };
 
-  const handleFiles = (event, setter) => {
-    setter(event.target.files ? Array.from(event.target.files) : []);
+  const handleSubmit = (e) => {
+    e.preventDefault();
   };
 
   return (
-    <div className="min-h-screen w-full bg-gray-50 flex flex-col items-center py-10 px-4">
-      <div className="bg-white w-full max-w-2xl rounded-xl shadow p-8">
-        <h2 className="text-xl font-semibold text-center mb-4">
-          Education & Experience
-        </h2>
-
-        <p className="text-center text-gray-500 mb-8">
-          Share your qualifications and achievements
-        </p>
-
-        {/* Portfolio Upload */}
-        <div className="mb-8">
-          <label className="block font-medium mb-1">
-            Professional Portfolio / Work Examples
-            <span className="text-gray-400"> (Optional)</span>
-          </label>
-          <p className="text-sm text-gray-500 mb-3">
-            Upload examples of your teaching materials, student success stories,
-            or achievements.
-          </p>
-
-          <div
-            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-500 transition"
-            onClick={() => portfolioInputRef.current.click()}
-          >
-            <p className="text-gray-600">
-              Click to upload your portfolio files
-            </p>
-            <p className="text-xs text-gray-400 mt-1">
-              PDF, PNG, JPG – Multiple files allowed
-            </p>
-            {portfolioFiles.length > 0 && (
-              <ul className="mt-2 text-left text-sm text-gray-700">
-                {portfolioFiles.map((file, idx) => (
-                  <li key={idx}>{file.name}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          <input
-            type="file"
-            ref={portfolioInputRef}
-            className="hidden"
-            multiple
-            onChange={(e) => handleFiles(e, setPortfolioFiles)}
-          />
+    <div className="w-full max-w-xl mx-auto p-8 bg-white shadow-lg rounded-lg">
+      {/* image here */}
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4 flex flex-col items-center">
+          <h3 className="text-xl font-medium">პროფილის შექმნა</h3>
+          <p className="text-sm text-gray-500">მედია</p>
         </div>
 
-        {/* Diploma Upload */}
-        <div className="mb-8">
-          <label className="block font-medium mb-2">
-            Upload Diploma <span className="text-gray-400">(Optional)</span>
-          </label>
-
-          <div
-            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-500 transition"
-            onClick={() => diplomaInputRef.current.click()}
+        {/* Profile Photo Upload */}
+        <div className="mb-4">
+          <label
+            htmlFor="profilePhoto"
+            className="block text-lg font-medium text-gray-700"
           >
-            <p className="text-gray-600">Click to upload diploma</p>
-            <p className="text-xs text-gray-400 mt-1">
-              PDF, PNG, JPG – Up to 10MB
+            პროფილის ფოტო * <span className="text-red-500">*</span>
+          </label>
+          <div className="border-2 border-dashed border-gray-300 p-4 rounded-md text-center">
+            <p className="text-sm text-gray-500 mb-2">
+              ატვირთე პროფესიონალური და მეგობრული ფოტო — ეს იქნება პირველი, რაც
+              მოსწავლებმა დაგინახონ!
             </p>
-            {diplomaFile && (
-              <p className="mt-2 text-gray-700">{diplomaFile.name}</p>
-            )}
+            <input
+              type="file"
+              id="profilePhoto"
+              onChange={(e) => handleFileChange(e, "profilePhoto")}
+              className="block w-full text-sm text-gray-500 border rounded-md p-2"
+              accept="image/png, image/jpeg"
+            />
+            <div className="text-sm text-gray-400 mt-2">
+              <p>დააჭირე აქ პროფილის ფოტოს ასატვირთად</p>
+              <p>PNG, JPG მაქსიმუმ 10MB</p>
+              <p>
+                რეკომენდაცია: კვადრატული ფოტო, მომღიმარი, პროფესიონალური ფონი
+              </p>
+            </div>
           </div>
-
-          <input
-            type="file"
-            ref={diplomaInputRef}
-            className="hidden"
-            onChange={(e) => handleFiles(e, setDiplomaFile)}
-          />
         </div>
 
-        {/* Certificates Upload */}
-        <div className="mb-8">
-          <label className="block font-medium mb-2">
-            Professional Certificates{" "}
-            <span className="text-gray-400">(Optional)</span>
-          </label>
-
-          <p className="text-sm text-gray-500 mb-3">
-            Upload certifications like TEFL, IELTS examiner, or other relevant
-            qualifications.
-          </p>
-
-          <div
-            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-500 transition"
-            onClick={() => certificateInputRef.current.click()}
+        {/* Introduction Video Upload */}
+        <div className="mb-4">
+          <label
+            htmlFor="introductionVideo"
+            className="block text-lg font-medium text-gray-700"
           >
-            <p className="text-gray-600">Click to upload your certificates</p>
-            <p className="text-xs text-gray-400 mt-1">
-              PDF, PNG, JPG – Multiple files allowed
+            სასწავლო ვიდეო <p>(სურვილისამებრ)</p>{" "}
+            <span className="text-red-500">*</span>
+          </label>
+          <div className="text-sm text-gray-400 mt-2">
+            <p>ვიდეოს მოთხოვნები</p>
+            <ul className="list-disc pl-6 text-gray-500">
+              <li>ვიდეოს ხანგრძლივობა: 30–90 წამი</li>
+              <li>წარადგინე შენი თავი და შენი საგაკვეთილო გამოცდილება</li>
+              <li>აუხსენი მოსწავლეებს, რა ხდის შენს გაკვეთილებს უნიკალურად</li>
+              <li>გამოაჩინე შენი პიროვნება და სწავლების სტილი</li>
+              <li>უზრუნველყავი კარგი განათება და სუფთა ხმა</li>
+            </ul>
+            <p className="mt-2">
+              💡 ვიდეოიანი ტუტორები 3-ჯერ მეტ მოთხოვნას იღებენ!
             </p>
-            {certificateFiles.length > 0 && (
-              <ul className="mt-2 text-left text-sm text-gray-700">
-                {certificateFiles.map((file, idx) => (
-                  <li key={idx}>{file.name}</li>
-                ))}
-              </ul>
-            )}
           </div>
-
-          <input
-            type="file"
-            ref={certificateInputRef}
-            className="hidden"
-            multiple
-            onChange={(e) => handleFiles(e, setCertificateFiles)}
-          />
+          <div className="border-2 border-dashed border-gray-300 p-4 rounded-md text-center">
+            <input
+              type="file"
+              id="introductionVideo"
+              onChange={(e) => handleFileChange(e, "introductionVideo")}
+              className="block w-full text-sm text-gray-500 border rounded-md p-2"
+              accept="video/mp4, video/mov"
+            />
+            <p>დააჭირე შესავალი ვიდეოს ასატვირთად ან გადასაღებლად</p>
+            <p>MP4, MOV მაქსიმუმ 50MB</p>
+          </div>
         </div>
 
-        {/* Buttons */}
-        <div className="flex justify-between mt-8">
+        {/* Submit Button */}
+        <div className="flex justify-between mt-6">
           <button
-            onClick={onBack}
-            className="px-6 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-100"
+            type="button"
+            className="bg-gray-200 text-gray-600 px-4 py-2 rounded-md"
           >
-            ← Back
+            Back
           </button>
-
           <button
-            onClick={onNext}
-            className="px-6 py-2 rounded-md bg-gradient-to-r from-purple-500 to-indigo-500 text-white hover:opacity-90"
+            type="submit"
+            className="bg-purple-600 text-white px-6 py-2 rounded-md"
           >
-            Finish Registration →
+            Continue
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
-}
+};
+
+export default MediaProfileSetupForm;
